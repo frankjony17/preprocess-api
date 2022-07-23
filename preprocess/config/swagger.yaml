@@ -1,0 +1,163 @@
+swagger: '2.0'
+
+info:
+  version: 0.1.0
+  title: Preprocess API
+  description: 'Process images, apply filters, rotate image, increase  image and others.'
+  contact:
+    email: frankjony17@gmail.com
+
+schemes:
+  - http
+
+tags:
+  - name: Preprocess
+    description: 'Image operations.'
+
+paths:
+  /image/rotate-by-angle:
+    post:
+      tags:
+        - Preprocess
+      description: 'Rotate image from an angle.'
+      parameters:
+        - name: images_angle
+          in: body
+          required: true
+          description: 'Image encoded in base64 and integer angle.'
+          schema:
+            $ref: '#/definitions/ImageAngle'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Response200'
+        '400':
+          description: 'Bad Request, wrong syntax'
+          schema:
+            $ref: '#/definitions/Error400'
+        '400-1':
+          description: 'Bad Request, wrong base64'
+          schema:
+            $ref: '#/definitions/Error400-1'
+        '400-4':
+          description: 'Bad Request, required parameters missing'
+          schema:
+            $ref: '#/definitions/Error400-4'
+        '400-5':
+          description: 'Bad Request, required value false'
+          schema:
+            $ref: '#/definitions/Error400-4'
+
+  /image/increase-by-scale:
+    post:
+      tags:
+        - Preprocess
+      description: 'Increase image according to scale.'
+      parameters:
+        - name: images_increase
+          in: body
+          required: true
+          description: 'Image encoded in base64 and integer scale.'
+          schema:
+            $ref: '#/definitions/ImageIncrease'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Response200'
+        '400':
+          description: 'Bad Request, wrong syntax'
+          schema:
+            $ref: '#/definitions/Error400'
+        '400-1':
+          description: 'Bad Request, wrong base64'
+          schema:
+            $ref: '#/definitions/Error400-1'
+        '400-4':
+          description: 'Bad Request, required parameters missing'
+          schema:
+            $ref: '#/definitions/Error400-4'
+        '400-5':
+          description: 'Bad Request, required value false'
+          schema:
+            $ref: '#/definitions/Error400-4'
+
+definitions:
+  ImageAngle:
+    type: object
+    required:
+      - image
+      - angle
+    properties:
+      image:
+        type: string
+        example: 'ZXhhbXBsZQ=='
+      angle:
+        type: int
+        example: 90
+
+  ImageIncrease:
+    type: object
+    required:
+      - image
+      - scale
+    properties:
+      image:
+        type: string
+        example: 'ZXhhbXBsZQ=='
+      scale:
+        type: int
+        example: 270
+
+  Response200:
+    type: object
+    properties:
+    example: {
+      "b64_image": "ZXhhbXBsZQ=="
+    }
+
+  Error400:
+    type: object
+    properties:
+      message:
+        type: string
+        example: 'Bad Request, wrong syntax'
+      details:
+        type: string
+        example: 'The request could not be understood by the server due to
+        malformed syntax. The client SHOULD NOT repeat the request without
+        modifications.'
+
+  Error400-1:
+    type: object
+    properties:
+      message:
+        type: string
+        example: 'Bad Request, wrong base64'
+      details:
+        type: string
+        example: 'Wrong base64 format, read Preprocess API documentation
+        in /docs for further questions.'
+
+  Error400-4:
+    type: object
+    properties:
+      message:
+        type: string
+        example: 'Bad Request, required parameters missing'
+      details:
+        type: string
+        example: "Required parameters wasn't found, read Preprocess API
+        documentation in /docs for further questions."
+
+  Error400-5:
+    type: object
+    properties:
+      message:
+        type: string
+        example: 'Bad Request, required value false.'
+      details:
+        type: string
+        example: "Required value false, the value of the angle/scale parameter
+         must be numeric (int)., read Preprocess API documentation in /docs for further questions."
